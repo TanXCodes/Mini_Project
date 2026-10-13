@@ -1,0 +1,27 @@
+# Shared settings. Everyone reads from here, nobody hardcodes numbers.
+seed: 42
+
+paths:
+  nodes: data/nodes.csv
+  edges: data/edges.csv
+  traffic: data/traffic_raw.csv
+  model: models/delay_model.joblib
+  results: outputs/results.csv
+
+# Scenarios used in Normal vs Priority comparison (time_slot values come from traffic_raw.csv)
+scenarios:
+  - {name: midday_normal,        time_slot: midday,       accident: false}
+  - {name: morning_peak,         time_slot: morning_peak, accident: false}
+  - {name: evening_peak,         time_slot: evening_peak, accident: false}
+  - {name: evening_peak_accident, time_slot: evening_peak, accident: true}
+
+# Signal simulation (Tanay). Only 5 real signals in data, so extra ones are simulated.
+signals:
+  cycle_s: 90          # full signal cycle
+  green_s: 40          # green duration inside the cycle
+  priority_timeout_s: 30
+  extra_simulated_signals: 15   # busiest primary/secondary junctions marked as signals
+
+# Ambulance pairs (node ids), fill after checking nodes.csv
+trips:
+  - {source: null, hospital: null}
