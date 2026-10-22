@@ -63,6 +63,8 @@ def build_dataset():
         (df["from_has_signal"] == 1)
         | (df["to_has_signal"] == 1)
     ).astype(int)
+    # Volume-to-capacity ratio
+    df["vc_ratio"] = df["volume"] / df["capacity"]
 
     # Handle missing speed limits using road-class median
     df["maxspeed"] = df["maxspeed"].fillna(
