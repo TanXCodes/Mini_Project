@@ -338,8 +338,9 @@ def main():
     # ---------------------------------------------------------
     joblib.dump(
         best_model,
-        "models/delay_model.joblib"
-    )
+        "models/delay_model.joblib",
+        compress=3
+    )    
 
     print("\nSaved files:")
     print("outputs/model_metrics.csv")
