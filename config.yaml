@@ -24,4 +24,6 @@ signals:
 
 # Ambulance pairs (node ids), fill after checking nodes.csv
 trips:
-  - {source: null, hospital: null}
+  - {source: 363775666, hospital: 3716332298}
+  - {source: 309593064, hospital: 7148693828}
+  - {source: 305091341, hospital: 2228225821}
