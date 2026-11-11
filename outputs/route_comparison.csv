@@ -1,0 +1,13 @@
+trip,source,hospital,scenario,baseline_time_s,ml_time_s,added_delay_s,baseline_segments,ml_segments,distance_km,route_changed
+Trip 1,363775666,3716332298,midday_normal,248.29,249.49,1.2,36,36,2.744,False
+Trip 1,363775666,3716332298,morning_peak,248.29,270.94,22.65,36,36,2.744,False
+Trip 1,363775666,3716332298,evening_peak,248.29,275.5,27.21,36,36,2.744,False
+Trip 1,363775666,3716332298,evening_peak_accident,248.29,842.01,593.72,36,36,2.744,False
+Trip 2,309593064,7148693828,midday_normal,193.57,194.69,1.13,24,24,2.412,False
+Trip 2,309593064,7148693828,morning_peak,193.57,210.89,17.33,24,24,2.412,False
+Trip 2,309593064,7148693828,evening_peak,193.57,214.82,21.25,24,24,2.412,False
+Trip 2,309593064,7148693828,evening_peak_accident,193.57,639.94,446.37,24,24,2.412,False
+Trip 3,305091341,2228225821,midday_normal,247.45,249.08,1.63,40,40,2.571,False
+Trip 3,305091341,2228225821,morning_peak,247.45,266.57,19.13,40,40,2.571,False
+Trip 3,305091341,2228225821,evening_peak,247.45,272.67,25.23,40,40,2.571,False
+Trip 3,305091341,2228225821,evening_peak_accident,247.45,860.44,612.99,40,40,2.571,False
