@@ -1,4 +1,4 @@
-source,hospital,avg_normal_s,avg_priority_s,avg_normal_wait_s,avg_saved_s,saved_pct,min_saved_s,max_saved_s
-363775666,3716332298,274.3,248.3,26.0,26.0,9.5,0.0,83.7
-309593064,7148693828,233.6,193.6,40.1,40.0,17.1,0.0,114.1
-305091341,2228225821,288.4,247.4,40.9,41.0,14.2,0.0,96.3
+source,hospital,avg_normal_s,avg_priority_s,avg_normal_wait_s,avg_priority_overhead_s,avg_saved_s,saved_pct,min_saved_s,max_saved_s,priority_slower_seeds
+363775666,3716332298,274.3,270.3,26.0,22.0,4.0,1.4,-22.0,61.7,17
+309593064,7148693828,233.6,226.6,40.1,33.0,7.0,3.0,-33.0,81.1,11
+305091341,2228225821,288.4,280.4,40.9,33.0,8.0,2.8,-33.0,63.3,13

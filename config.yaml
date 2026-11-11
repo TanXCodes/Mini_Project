@@ -17,10 +17,13 @@ scenarios:
 
 # Signal simulation (Tanay). Only 5 real signals in data, so extra ones are simulated.
 signals:
-  cycle_s: 90          # full signal cycle
-  green_s: 40          # green duration inside the cycle
+  cycle_s: 90
+  green_s: 40
   priority_timeout_s: 30
-  extra_simulated_signals: 15   # busiest primary/secondary junctions marked as signals
+  transition_s: 5
+  crossing_s: 4
+  recovery_s: 2
+  extra_simulated_signals: 15
 
 # Ambulance pairs (node ids), fill after checking nodes.csv
 trips:
