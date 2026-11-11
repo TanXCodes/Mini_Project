@@ -35,3 +35,43 @@ def test_same_source_and_hospital():
 def test_unreachable():
     with pytest.raises(NoPath):
         compute_route("A", "Z", G=tiny_graph())
+
+def test_unknown_source():
+    with pytest.raises(ValueError, match="unknown junction id"):
+        compute_route("X", "D", G=tiny_graph())
+
+
+def test_unknown_hospital():
+    with pytest.raises(ValueError, match="unknown junction id"):
+        compute_route("A", "X", G=tiny_graph())
+
+@pytest.mark.parametrize(
+    "bad_delay",
+    [-1, float("nan"), float("inf"), float("-inf")]
+)
+def test_invalid_ml_delay(bad_delay):
+    delay = lambda seg, sc: bad_delay
+
+    with pytest.raises(
+        ValueError,
+        match="finite and non-negative"
+    ):
+        compute_route(
+            "A",
+            "D",
+            delay_fn=delay,
+            G=tiny_graph()
+        )
+
+
+def test_empty_graph_is_respected():
+    G = nx.DiGraph()
+
+    with pytest.raises(ValueError, match="unknown junction id"):
+        compute_route("A", "D", G=G)
+
+
+
+
+
+
