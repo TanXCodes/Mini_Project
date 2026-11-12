@@ -316,11 +316,12 @@ def _build_scenario_cache(
     # ---------------------------------------------------------------
     # Accident handling.
     #
-    # If affected_segments is supplied, ONLY those segments receive
-    # incident_flag=True.
+    # For controlled localized accidents, incident_flag remains False
+    # through a 2x multiplier on affected segments only.
+    # for all segments. The accident effect is applied separately
     #
-    # If accident=True but affected_segments is empty, we keep
-    # backward compatibility by treating all segments as affected.
+    # If accident=True and affected_segments is empty,
+    # backward compatibility applies the incident flag to all segments.
     # ---------------------------------------------------------------
 
     if accident and affected_segments:

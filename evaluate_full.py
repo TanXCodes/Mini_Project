@@ -130,6 +130,9 @@ for (trip_name, scenario_name, mode), records in groups.items():
             if mode == "priority" else 0,
         "seeds_evaluated": len(records),
     })
+# Validate expected evaluation counts.
+assert len(runs) == 720, f"Expected 720 runs, got {len(runs)}"
+assert len(summary) == 24, f"Expected 24 summary rows, got {len(summary)}"
 
 summary_file = output_dir / "full_evaluation_summary.csv"
 
