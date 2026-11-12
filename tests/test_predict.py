@@ -1,6 +1,7 @@
 """Tests for ML delay prediction."""
-
+import pytest
 from src.predict import predict_delay, delay_fn
+
 
 
 def get_features():
@@ -41,20 +42,18 @@ def test_predict_delay_is_not_negative():
 
     assert delay >= 0
 
-
-def test_accident_delay_is_higher_than_normal():
-    """Affected accident segment should have higher delay."""
-    segment = "17327139_309593057_0"
+def test_affected_segment_delay_is_exactly_double():
+    segment = "4761188837_11964724285_0"
 
     normal = {
-        "name": "midday_normal",
-        "time_slot": "midday",
+        "name": "evening_peak",
+        "time_slot": "evening_peak",
         "accident": False,
         "affected_segments": [],
     }
 
     accident = {
-        "name": "accident",
+        "name": "evening_peak_accident",
         "time_slot": "evening_peak",
         "accident": True,
         "affected_segments": [segment],
@@ -63,4 +62,29 @@ def test_accident_delay_is_higher_than_normal():
     normal_delay = delay_fn(segment, normal)
     accident_delay = delay_fn(segment, accident)
 
-    assert accident_delay >= normal_delay
+    assert accident_delay == pytest.approx(normal_delay * 2)
+
+
+def test_unaffected_segment_delay_remains_unchanged():
+    segment = "309593057_309593064_0"
+
+    normal = {
+        "name": "evening_peak",
+        "time_slot": "evening_peak",
+        "accident": False,
+        "affected_segments": [],
+    }
+
+    accident = {
+        "name": "evening_peak_accident",
+        "time_slot": "evening_peak",
+        "accident": True,
+        "affected_segments": [
+            "4761188837_11964724285_0"
+        ],
+    }
+
+    normal_delay = delay_fn(segment, normal)
+    accident_delay = delay_fn(segment, accident)
+
+    assert accident_delay == pytest.approx(normal_delay)

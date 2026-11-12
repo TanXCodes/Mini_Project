@@ -13,7 +13,7 @@ Optimizations:
 """
 
 import os
-
+import pytest
 import joblib
 import pandas as pd
 
@@ -322,24 +322,20 @@ def _build_scenario_cache(
     # If accident=True but affected_segments is empty, we keep
     # backward compatibility by treating all segments as affected.
     # ---------------------------------------------------------------
+    if accident and affected_segments:
+    # Controlled experiment:
+    # Keep the model's incident feature False for every segment.
+    # The accident effect is applied separately using the 2x multiplier.
+        df["incident_flag"] = False
 
-    if accident:
-
-        if affected_segments:
-
-            df["incident_flag"] = (
-                df["segment_id"]
-                .astype(str)
-                .isin(affected_segments)
-            )
-
-        else:
-
-            df["incident_flag"] = True
+    elif accident:
+    # Preserve backward-compatible network-wide accident behaviour
+    # when no specific affected segments are supplied.
+        df["incident_flag"] = True
 
     else:
-
         df["incident_flag"] = False
+
 
     # ---------------------------------------------------------------
     # VC ratio.

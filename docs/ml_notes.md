@@ -300,77 +300,106 @@ seconds
 
 This conversion allows the routing system to combine free-flow travel time with the ML-predicted additional delay.
 
-10\. Accident Scenario
 
-The ML routing integration supports an accident scenario using:
+10. Controlled Accident Scenario
 
-affected\_segments
+The routing integration supports localized accident simulation using:
 
+affected_segments
 
+This is a list of selected road segment IDs affected by an accident.
 
-as a list of affected segment IDs.
+For the controlled accident experiment, the existing evening-peak ML prediction is used as the reference.
 
+Accident handling:
 
+- The model's incident_flag feature is kept False for all segments when selected affected_segments are supplied.
+- Only selected affected segments receive a 2x multiplier.
+- Unaffected segments retain exactly their normal evening-peak predictions.
+- The normal evening-peak prediction behaviour remains unchanged.
+- The existing backward-compatible network-wide accident behaviour is retained when accident=True and affected_segments is empty.
 
-For an accident scenario, affected segments receive an additional higher predicted delay while unaffected segments retain their normal predicted delay.
+Formula:
 
+Affected segment:
+Accident delay = 2 x Normal evening-peak delay
 
+Unaffected segment:
+Accident delay = Normal evening-peak delay
 
-Example validation:
+The 2x multiplier is a controlled simulation assumption and does not represent a separately calibrated real-world accident model.
 
-Affected segment delay: 17.1206 seconds
+Validation requirements:
 
-Unaffected segment delay: 0.5964 seconds
+1. Unaffected segment predictions must remain identical.
+2. Affected segment predictions must be exactly twice their normal predictions.
+3. Route-level travel times must reflect the localized accident delays.
 
+## 11. Controlled Accident Scenario Validation
 
+The localized accident scenario was tested using three demo trips and three selected affected road segments.
 
-This confirms that the accident scenario increases delay on the affected segment.
+The experiment compared normal evening-peak predictions with localized accident predictions.
 
-11\. Scenario Validation
+### Affected segments
 
-Four scenarios were tested using delay\_fn().
+| Trip | Affected segment ID |
+|---|---|
+| Trip 1 | `12451306645_3399067454_0` |
+| Trip 2 | `4761188837_11964724285_0` |
+| Trip 3 | `1620344798_254920166_0` |
 
-Scenario	Average Delay
+### Route comparison results
 
-Normal / midday	0.0303 sec
+| Trip | Normal evening (s) | Localized accident (s) | Additional delay (s) |
+|---|---:|---:|---:|
+| Trip 1 | 275.499 | 279.236 | 3.737 |
+| Trip 2 | 214.821 | 218.713 | 3.892 |
+| Trip 3 | 272.675 | 274.920 | 2.245 |
 
-Morning peak	0.3658 sec
+The route remained unchanged for all three trips because the alternative routes were not faster than the original routes after applying the localized accident delays.
 
-Evening peak	0.7683 sec
+### Segment-level validation
 
-Accident / evening peak	8.8585 sec
+All 3,151 road segments were checked.
 
+- Affected segments received exactly twice their normal evening-peak predictions.
+- Unaffected segments retained exactly the same predictions.
+- Both validation checks passed successfully.
 
+The route comparison results are saved in:
 
+`outputs/localized_accident_comparison.csv`
 
+## 12. Testing
 
-The results show increasing predicted delay under heavier traffic conditions and a substantially higher delay for the accident scenario.
+The complete project test suite was executed using:
 
-12\. Testing
+```bash
+python -m pytest -v
+```
 
-The project tests were executed using:
+**Result: 23 passed in 2.50 seconds.**
 
-python -m pytest -q tests
+The tests covered:
 
+- Dijkstra shortest-path selection.
+- ML delay prediction.
+- Affected-segment 2x accident delay.
+- Unaffected-segment prediction consistency.
+- Three real demo routes.
+- Invalid ML delay handling.
+- Empty graph handling.
+- Signal simulation and emergency priority.
 
+All 23 tests passed successfully.
 
-Result:
+## 13. Summary
 
-8 passed
+The ML module prepares traffic data, creates engineered features such as `vc_ratio`, prevents data leakage, trains and evaluates Linear Regression and Random Forest models, and provides predicted road-segment delays to the routing module.
 
+Random Forest was selected as the best-performing model, achieving an R² of approximately 0.91 on the day-wise test set.
 
+The `delay_fn()` interface supplies predicted delay in seconds for route calculation. The localized accident experiment applies a controlled 2x multiplier only to selected affected segments while keeping unaffected predictions unchanged.
 
-The ML prediction and routing integration tests passed successfully.
-
-13\. Summary
-
-The ML module prepares the traffic dataset, creates useful traffic features such as vc\_ratio, prevents leakage from speed\_kmph and travel\_time\_min, trains and compares Linear Regression and Random Forest models, and provides predicted segment delay for the routing system.
-
-
-
-Random Forest was selected as the best-performing model with an R² of approximately 0.91 on the day-wise test set.
-
-
-
-The delay\_fn() interface provides the routing module with predicted delay in seconds and supports accident scenarios for affected road segments.
-
+The final implementation was validated across 3,151 road segments and three demo trips. The complete project test suite passed with 23 tests.
