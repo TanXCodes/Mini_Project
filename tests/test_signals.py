@@ -150,3 +150,40 @@ def test_priority_timeout_returns_to_normal():
     ]
     assert s.priority_until is None
     assert s.state == NORMAL
+def test_simulator_priority_timeout_returns_to_normal():
+    cfg = {
+        "signals": {
+            "cycle_s": 90,
+            "green_s": 40,
+            "priority_timeout_s": 3,
+            "transition_s": 5,
+            "crossing_s": 4,
+            "recovery_s": 2,
+            "extra_simulated_signals": 0,
+        }
+    }
+
+    route = {
+        "path": [1, 2, 3],
+        "segment_times_s": [60, 60],
+    }
+
+    result = run_simulation(
+        route, "priority", 7, {2}, cfg
+    )
+
+    states = [
+        event["state"] for event in result["events"]
+    ]
+
+    assert states == [
+        PRIORITY_TRANSITION,
+        PRIORITY_GREEN,
+        "PRIORITY_TIMEOUT",
+        RECOVERY,
+        NORMAL,
+    ]
+
+    assert result["wait_time_s"] == 0
+    assert result["priority_time_s"] == 10
+    assert result["journey_time_s"] == 130
