@@ -125,3 +125,28 @@ def test_simulator_logs_priority_phases():
         RECOVERY,
         NORMAL,
     ]
+def test_priority_timeout_returns_to_normal():
+
+    s = SignalController(
+        "J1",
+        transition_s=5,
+        crossing_s=4,
+        recovery_s=2,
+        priority_timeout_s=3,
+    )
+
+    result = s.request_priority(50)
+
+    states = [event["state"] for event in s.last_events]
+
+    assert result == 10
+    assert s.priority_duration_s == 10
+    assert states == [
+        PRIORITY_TRANSITION,
+        PRIORITY_GREEN,
+        "PRIORITY_TIMEOUT",
+        RECOVERY,
+        NORMAL,
+    ]
+    assert s.priority_until is None
+    assert s.state == NORMAL
