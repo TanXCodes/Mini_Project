@@ -1,3 +1,5 @@
+import pytest
+
 from src.signals import (
     SignalController,
     NORMAL,
@@ -26,7 +28,7 @@ def test_priority_has_zero_signal_wait_and_returns_to_normal():
     assert s.state == NORMAL
 
 
-def test_priority_overhead_is_11_seconds():
+def test_priority_delay_excludes_crossing_and_recovery():
     s = SignalController(
         "J1",
         transition_s=5,
@@ -36,7 +38,7 @@ def test_priority_overhead_is_11_seconds():
 
     s.wait_time(50, priority=True)
 
-    assert s.priority_duration_s == 11
+    assert s.priority_duration_s == 5
 
 
 def test_priority_event_sequence():
@@ -90,8 +92,8 @@ def test_simulator_adds_priority_overhead():
     )
 
     assert result["wait_time_s"] == 0
-    assert result["priority_time_s"] == 22
-    assert result["journey_time_s"] == 202
+    assert result["priority_time_s"] == pytest.approx(5.9)
+    assert result["journey_time_s"] == pytest.approx(185.9)
 
 
 def test_simulator_logs_priority_phases():
@@ -139,8 +141,8 @@ def test_priority_timeout_returns_to_normal():
 
     states = [event["state"] for event in s.last_events]
 
-    assert result == 10
-    assert s.priority_duration_s == 10
+    assert result == 5
+    assert s.priority_duration_s == 5
     assert states == [
         PRIORITY_TRANSITION,
         PRIORITY_GREEN,
@@ -185,5 +187,29 @@ def test_simulator_priority_timeout_returns_to_normal():
     ]
 
     assert result["wait_time_s"] == 0
-    assert result["priority_time_s"] == 10
-    assert result["journey_time_s"] == 130
+    assert result["priority_time_s"] == pytest.approx(0.9)
+    assert result["journey_time_s"] == pytest.approx(120.9)
+
+
+def test_priority_on_green_signal_has_zero_delay():
+    s = SignalController(
+        "J1", cycle_s=90, green_s=40, offset_s=0,
+        transition_s=5,
+    )
+
+    s.wait_time(10, priority=True)
+
+    assert s.priority_duration_s == 0
+    assert s.last_events[0]["duration_s"] == 0
+
+
+def test_priority_uses_shorter_remaining_red_wait():
+    s = SignalController(
+        "J1", cycle_s=90, green_s=40, offset_s=0,
+        transition_s=5,
+    )
+
+    s.wait_time(89, priority=True)
+
+    assert s.priority_duration_s == 1
+    assert s.last_events[0]["duration_s"] == 1

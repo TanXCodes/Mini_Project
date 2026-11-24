@@ -1,8 +1,8 @@
 """Owner: Tanay. Move an ambulance along a route and log signal events.
 
 Signal waiting is added here, not by routing.
-Priority transition, crossing and recovery durations are also
-included in priority journey time.
+Only the priority signal transition delay is included in
+priority journey time. Crossing and recovery are logged separately.
 """
 
 import random

@@ -64,55 +64,50 @@ class SignalController:
     # ---- priority mode ------------------------------------------------
 
     def request_priority(self, t):
-        """Process an ambulance priority request through timed phases."""
+        """Request emergency priority and record all signal phases."""
         self.last_events = []
         self.priority_duration_s = 0.0
 
-        # Phase 1: transition before priority green
+        # Only wait for the limited transition if the normal signal is red.
+        red_wait = self.normal_wait(t)
+        transition_duration = min(red_wait, self.transition_s)
+
         self.state = PRIORITY_TRANSITION
         self.last_events.append({
             "time": round(t, 1),
             "state": self.state,
-            "duration_s": self.transition_s,
+            "duration_s": transition_duration,
         })
 
-        green_start = t + self.transition_s
+        green_start = t + transition_duration
 
-        # Phase 2: activate priority green
         self.state = PRIORITY_GREEN
         self.priority_until = green_start + self.priority_timeout_s
+
+        crossing_duration = min(
+            self.crossing_s, self.priority_timeout_s
+        )
 
         self.last_events.append({
             "time": round(green_start, 1),
             "state": self.state,
-            "duration_s": min(
-                self.crossing_s, self.priority_timeout_s
-            ),
+            "duration_s": crossing_duration,
         })
 
-        # Phase 3: ambulance crossing or priority timeout
+        crossing_end = green_start + crossing_duration
+
         if self.crossing_s <= self.priority_timeout_s:
-            crossing_duration = self.crossing_s
-            crossing_end = green_start + crossing_duration
-
             self.state = CROSSED
-            self.last_events.append({
-                "time": round(crossing_end, 1),
-                "state": self.state,
-                "duration_s": 0.0,
-            })
         else:
-            crossing_duration = self.priority_timeout_s
-            crossing_end = green_start + crossing_duration
-
             self.state = PRIORITY_TIMEOUT
-            self.last_events.append({
-                "time": round(crossing_end, 1),
-                "state": self.state,
-                "duration_s": 0.0,
-            })
 
-        # Phase 4: recovery after priority mode
+        self.last_events.append({
+            "time": round(crossing_end, 1),
+            "state": self.state,
+            "duration_s": 0.0,
+        })
+
+        # Recovery is logged but is not ambulance journey delay.
         self.state = RECOVERY
         self.last_events.append({
             "time": round(crossing_end, 1),
@@ -120,13 +115,8 @@ class SignalController:
             "duration_s": self.recovery_s,
         })
 
-        self.priority_duration_s = (
-            self.transition_s
-            + crossing_duration
-            + self.recovery_s
-        )
+        self.priority_duration_s = transition_duration
 
-        # Return to normal operation
         self.state = NORMAL
         self.priority_until = None
 
