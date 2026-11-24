@@ -68,7 +68,7 @@ class SignalController:
         self.last_events = []
         self.priority_duration_s = 0.0
 
-        # Only wait for the limited transition if the normal signal is red.
+        # Limit transition delay to the remaining normal red time.
         red_wait = self.normal_wait(t)
         transition_duration = min(red_wait, self.transition_s)
 
@@ -107,7 +107,7 @@ class SignalController:
             "duration_s": 0.0,
         })
 
-        # Recovery is logged but is not ambulance journey delay.
+        # Recovery is logged but excluded from ambulance journey delay.
         self.state = RECOVERY
         self.last_events.append({
             "time": round(crossing_end, 1),
@@ -138,9 +138,9 @@ class SignalController:
         """Return signal waiting time.
 
         Normal mode: may wait for the next green phase.
-        Priority mode: requests emergency priority; normal signal waiting
-        is zero. Priority transition/crossing/recovery time is tracked
-        separately in priority_duration_s.
+        Priority mode: requests emergency priority; only the limited
+        transition delay is included in ambulance journey time.
+        Crossing and recovery are logged separately.
         """
         self.priority_duration_s = 0.0
 

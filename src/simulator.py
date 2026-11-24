@@ -1,8 +1,9 @@
 """Owner: Tanay. Move an ambulance along a route and log signal events.
 
 Signal waiting is added here, not by routing.
-Only the priority signal transition delay is included in
-priority journey time. Crossing and recovery are logged separately.
+Priority delay is min(normal red wait, transition_s); it is 0 when the
+signal is already green. Crossing and recovery are signal-side phases
+and are not added to the ambulance journey time.
 """
 
 import random
