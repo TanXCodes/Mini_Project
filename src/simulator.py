@@ -58,10 +58,10 @@ def run_simulation(route, mode, seed, signal_nodes=None, config=None):
     path = route["path"]
     seg_times = route["segment_times_s"]
 
-    rng = random.Random(seed)       # same seed => same signal offsets in both modes
+    rng = random.Random(seed)
     priority = mode == "priority"
 
-    signals = {}                    # one controller per junction, created lazily
+    signals = {}
     t = 0.0
     total_wait = 0.0
     total_priority_time = 0.0
@@ -70,7 +70,7 @@ def run_simulation(route, mode, seed, signal_nodes=None, config=None):
 
     for i, node in enumerate(path):
 
-        # Drive the previous road segment.
+        # Travel along the previous road segment.
         if i > 0:
             t += seg_times[i - 1]
 
@@ -99,6 +99,7 @@ def run_simulation(route, mode, seed, signal_nodes=None, config=None):
             if wait > 0:
                 red_stops += 1
 
+            # Record normal-mode event.
             if not priority:
                 events.append({
                     "t": round(arrival_time, 1),
@@ -107,8 +108,9 @@ def run_simulation(route, mode, seed, signal_nodes=None, config=None):
                     "wait_s": round(wait, 1),
                     "duration_s": 0.0,
                 })
+
+            # Record every priority phase separately.
             else:
-                # Record every priority phase separately.
                 for event in sig.last_events:
                     events.append({
                         "t": round(event["time"], 1),

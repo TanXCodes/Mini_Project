@@ -1,0 +1,25 @@
+trip,scenario,mode,avg_route_cost_s,avg_journey_time_s,avg_wait_time_s,avg_priority_time_s,avg_saved_vs_normal_s,saved_pct,priority_slower_seeds,seeds_evaluated
+Trip 1,midday_normal,normal,249.49,274.893,25.393,0.0,0.0,0.0,0,30
+Trip 1,midday_normal,priority,249.49,271.5,0.0,22.0,3.393,1.23,17,30
+Trip 1,morning_peak,normal,270.941,294.3,23.383,0.0,0.0,0.0,0,30
+Trip 1,morning_peak,priority,270.941,292.9,0.0,22.0,1.4,0.48,16,30
+Trip 1,evening_peak,normal,275.499,300.797,25.297,0.0,0.0,0.0,0,30
+Trip 1,evening_peak,priority,275.499,297.5,0.0,22.0,3.297,1.1,15,30
+Trip 1,evening_peak_accident,normal,842.007,864.467,22.467,0.0,0.0,0.0,0,30
+Trip 1,evening_peak_accident,priority,842.007,864.0,0.0,22.0,0.467,0.05,17,30
+Trip 2,midday_normal,normal,194.693,234.51,39.813,0.0,0.0,0.0,0,30
+Trip 2,midday_normal,priority,194.693,227.7,0.0,33.0,6.81,2.9,11,30
+Trip 2,morning_peak,normal,210.892,249.387,38.493,0.0,0.0,0.0,0,30
+Trip 2,morning_peak,priority,210.892,243.9,0.0,33.0,5.487,2.2,12,30
+Trip 2,evening_peak,normal,214.821,253.097,38.267,0.0,0.0,0.0,0,30
+Trip 2,evening_peak,priority,214.821,247.8,0.0,33.0,5.297,2.09,14,30
+Trip 2,evening_peak_accident,normal,639.938,686.857,46.923,0.0,0.0,0.0,0,30
+Trip 2,evening_peak_accident,priority,639.938,672.9,0.0,33.0,13.957,2.03,12,30
+Trip 3,midday_normal,normal,249.081,291.277,42.19,0.0,0.0,0.0,0,30
+Trip 3,midday_normal,priority,249.081,282.1,0.0,33.0,9.177,3.15,12,30
+Trip 3,morning_peak,normal,266.574,305.46,38.893,0.0,0.0,0.0,0,30
+Trip 3,morning_peak,priority,266.574,299.6,0.0,33.0,5.86,1.92,13,30
+Trip 3,evening_peak,normal,272.675,309.187,36.5,0.0,0.0,0.0,0,30
+Trip 3,evening_peak,priority,272.675,305.7,0.0,33.0,3.487,1.13,14,30
+Trip 3,evening_peak_accident,normal,860.439,907.653,47.207,0.0,0.0,0.0,0,30
+Trip 3,evening_peak_accident,priority,860.439,893.4,0.0,33.0,14.253,1.57,11,30
