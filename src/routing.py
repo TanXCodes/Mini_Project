@@ -6,8 +6,8 @@ Signal waiting time is NOT added here; the simulator adds it.
 """
 
 import networkx as nx
-import yaml
 import math
+import yaml
 
 from src.graph import build_graph
 
